@@ -1,36 +1,31 @@
 <?php
-// פרטי החיבור למסד הנתונים
+// Database connection details
 $db_server = 'localhost';
 $db_port = ':3306';
-$db_username = 'USERNAME'; // שם המשתמש של מסד הנתונים
-$db_password = 'PASSWORD'; // הסיסמה של מסד הנתונים
-$db_name = 'DATABASE'; // שם מסד הנתונים
+$db_username = 'your_db_username';
+$db_password = 'your_db_password';
+$db_name = 'your_db_name';
 
-$vtiger_form_url = "https://crm.shlomi.online/modules/Webforms/capture.php"; // URL של ה-webform
+$vtiger_form_url = "https://your-vtiger-domain.com/modules/Webforms/capture.php"; // Webform URL
 
 $conn = new mysqli($db_server . $db_port, $db_username, $db_password, $db_name);
 
-// בדיקת חיבור
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 echo "Connected successfully\n";
 
-// פונקציה לחילוץ שמונת הספרות האחרונות ממספר טלפון
+// Function to extract the last eight digits of a phone number
 function last_8_digits($phone) {
     return substr($phone, -8);
 }
 
-// פרטי הספק - להחלפה לפי הצורך
-$supplier_sender_param = 'sender'; // הפרמטר עבור מספר השולח
-$supplier_receiver_param = 'receiver'; // הפרמטר עבור מספר המקבל
-$supplier_message_param = 'msg'; // הפרמטר עבור תוכן ההודעה
-
-// קבלת והכנסת נתוני ה-SMS לכרטיס
+// Receive and insert SMS data into a ticket
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $sender = $_POST[$supplier_sender_param];
-    $receiver = $_POST[$supplier_receiver_param];
-    $message = $_POST[$supplier_message_param];
+    $sender = $_POST['sender'];
+    $receiver = $_POST['receiver'];
+    $message = $_POST['msg'];
     $received_at = date('Y-m-d H:i:s');
 
     // Normalize sender phone number
@@ -55,31 +50,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $contactName = $contactRow['firstname'] . ' ' . $contactRow['lastname'];
         echo "Found contact ID $contactId for sender $sender, last 8 digits: $last8Sender\n";
 
-        // יצירת הכותרת
-        $ticket_title = "התקבלה הודעת SMS מאת: $contactName ($sender)";
+        // Create ticket title
+        $ticket_title = "Received SMS from: $contactName ($sender)";
         $contact_field = "12x$contactId";
     } else {
         echo "No contact found for sender: $last8Sender\n";
-        $ticket_title = "התקבלה הודעת SMS מ-$sender";
+        $ticket_title = "Received SMS from $sender";
     }
 
-    // נתוני הכרטיס ל-webform
+    // Ticket data for the webform
     $postData = array(
-        "__vtrftk" => "sid:15b468d4a14a75dae93d7bf319508db5a7f3482e,1714861257",
-        "publicid" => "e94312f9e334f34a2a768946116a52de",
+        "__vtrftk" => "sid:your-session-id,1234567890",
+        "publicid" => "your-public-id",
         "urlencodeenable" => "1",
-        "name" => "SMS ל כרטיס",
+        "name" => "SMS to Ticket",
         "ticket_title" => $ticket_title,
         "ticketpriorities" => "Normal",
         "ticketstatus" => "SMS",
-        "cf_947" => $sender,
-        "cf_949" => $receiver,
-        "cf_953" => $received_at,
-        "cf_955" => $message,
+        "cf_sender" => $sender,
+        "cf_receiver" => $receiver,
+        "cf_received_at" => $received_at,
+        "cf_message" => $message,
         "contact_id" => $contact_field
     );
 
-    // שליחת נתונים ל-webform
+    // Send data to the webform
     $ch = curl_init($vtiger_form_url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
