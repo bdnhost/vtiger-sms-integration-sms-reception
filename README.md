@@ -46,7 +46,7 @@ Quick response guaranteed.
 
 Donations
 If this solution has been helpful to you or your business, please consider making a donation. Your support helps maintain and improve this project.
-Donate here: PayPal
+Donate here: PayPal -yaaqovb@gmail.com
 
 Contact
 For inquiries or support, please contact Jacob Bidani.
