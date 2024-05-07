@@ -4,7 +4,6 @@ A solution for integrating incoming SMS with VTiger 7,8.X  CRM, facilitating SMS
 VTiger SMS Integration - SMS Reception
 Author: Jacob Bidani
 Company: BDNHOST
-Position: Owner
 Contact: info@bdnhost.net
 SMS: +972532062346
 Website: https://bdnhost.net
