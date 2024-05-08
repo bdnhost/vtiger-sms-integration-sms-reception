@@ -43,9 +43,5 @@ If you need assistance with implementing this solution in your business or requi
 Send an SMS to: +972532062346
 Quick response guaranteed.
 
-Donations
-If this solution has been helpful to you or your business, please consider making a donation. Your support helps maintain and improve this project.
-Donate here: PayPal -yaaqovb@gmail.com
-
 Contact
 For inquiries or support, please contact Jacob Bidani.
